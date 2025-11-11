@@ -10,7 +10,7 @@ import { styled, useTheme } from '@mui/material/styles';
 
 export const StyledNavLink = styled("a")(( {theme} ) => ({
   textDecoration: "none",
-  color: `${theme.palette.tertiary.main}`,
+  color: `${theme.palette.tertiary.contrastText}`,
   fontWeight: 600,
   fontSize: "1rem",
   transition: "0.3s",
@@ -35,7 +35,7 @@ export const StyledDesktopToolbar = styled(Toolbar)(({ theme }) => ({
   },
   [theme.breakpoints.up('md')]: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "right",
     gap: theme.spacing(6),
   },
 }));
@@ -61,7 +61,7 @@ export default function Navbar() {
   };
 
   const NavBar = styled("div")(() => ({
-    background: `linear-gradient(180deg, ${theme.palette.secondary.main} 0%, rgba(0,0,0,0) 100%)`,
+    background: "linear-gradient(135deg, #730217 0%, #D9326F 100%)",
     color: theme.palette.secondary.contrastText,
     width: "100%",
   }));
@@ -104,10 +104,7 @@ export default function Navbar() {
                 <StyledNavLink href="#about">Sobre</StyledNavLink>
               </MenuItem>
               <MenuItem onClick={() => handleSmoothScroll("skills")}>
-                <StyledNavLink href="#skills">Prevenção</StyledNavLink>
-              </MenuItem>
-              <MenuItem onClick={() => handleSmoothScroll("projects")}>
-                <StyledNavLink href="#projects">Dados</StyledNavLink>
+                <StyledNavLink href="#prevention">Prevenção</StyledNavLink>
               </MenuItem>
             </Menu>
           </StyledMobileToolbar>
@@ -118,10 +115,7 @@ export default function Navbar() {
               <StyledNavLink href="#about">Sobre</StyledNavLink>
             </MenuItem>
             <MenuItem onClick={() => handleSmoothScroll("skills")}>
-              <StyledNavLink href="#skills">Prevenção</StyledNavLink>
-            </MenuItem>
-            <MenuItem onClick={() => handleSmoothScroll("projects")}>
-              <StyledNavLink href="#projects">Dados</StyledNavLink>
+              <StyledNavLink href="#prevention">Prevenção</StyledNavLink>
             </MenuItem>
           </StyledDesktopToolbar>
         </NavBar>
