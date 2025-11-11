@@ -22,7 +22,7 @@ const StyledImageBox = styled(Box)(() => ({
 
 const StyledImage = styled("img")(() => ({
   width: "200%",
-  height: "100%",          
+  height: "90%",          
   objectFit: "contain",
   display: "block",
 }));
@@ -44,6 +44,14 @@ const ScrollIcon = styled(KeyboardDoubleArrowDownIcon)(({ theme }) => ({
 }));
 
 function Home() {
+
+  const handleSmoothScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <GlobalStyles styles={{ "html, body": { margin: 0, padding: 0, height: "100%" } }} />
@@ -68,26 +76,11 @@ function Home() {
                   A campanha que destaca a importância da prevenção e do diagnóstico precoce do câncer de mama. Junte-se a essa causa!
                 </Typography>
                          
-                <Typography maxWidth={"25%"}
-                  component="a"
-                  sx={{
-                    color: "secondary.main",
-                    fontWeight: "bold",
-                    borderBottom: "2px solid transparent",
-                    transition: "0.3s",
-                    "&:hover": {
-                      borderBottom: "2px solid",
-                      borderColor: "secondary.main",
-                    },
-                  }}
-                >
-                  Ler mais →
-                </Typography>
               </Box>
             </Grid>
           </Grid>
         </Container>
-        <ScrollIcon />
+        <ScrollIcon onClick={() => handleSmoothScroll("about")}/>
       </StyledHome>
     </>
   );
