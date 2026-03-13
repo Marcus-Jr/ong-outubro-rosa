@@ -4,13 +4,15 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import { styled, useTheme } from '@mui/material/styles';
 
-export const StyledNavLink = styled("a")(( {theme} ) => ({
+export const StyledNavLink = styled("a")(({ theme }) => ({
   textDecoration: "none",
-  color: `${theme.palette.tertiary.contrastText}`,
+  color: theme.palette.tertiary.contrastText,
   fontWeight: 600,
   fontSize: "1rem",
   transition: "0.3s",
@@ -19,46 +21,28 @@ export const StyledNavLink = styled("a")(( {theme} ) => ({
   },
 }));
 
-export const StyledMobileToolbar = styled(Toolbar)(({ theme }) => ({
-  [theme.breakpoints.up('xs')]: {
-    display: "flex",
-    justifyContent: "end",
-  },
-  [theme.breakpoints.up('md')]: {
-    display: "none",
-  },
-}));
-
 export const StyledDesktopToolbar = styled(Toolbar)(({ theme }) => ({
-  [theme.breakpoints.up('xs')]: {
+  [theme.breakpoints.down('md')]: {
     display: "none",
   },
   [theme.breakpoints.up('md')]: {
     display: "flex",
-    justifyContent: "right",
+    justifyContent: "flex-end",
     gap: theme.spacing(6),
   },
 }));
 
+export const StyledMobileToolbar = styled(Toolbar)(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: "none",
+  },
+  display: "flex",
+  justifyContent: "flex-end",
+}));
+
 export default function Navbar() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const theme = useTheme();
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSmoothScroll = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      handleClose();
-    }
-  };
 
   const NavBar = styled("div")(() => ({
     background: "linear-gradient(135deg, #730217 0%, #D9326F 100%)",
@@ -66,60 +50,95 @@ export default function Navbar() {
     width: "100%",
   }));
 
+  const handleSmoothScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setDrawerOpen(false);
+    }
+  };
+
+  const navItems = [
+    { label: "Sobre", id: "about" },
+    { label: "Prevenção", id: "prevention" },
+  ];
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="absolute"
         elevation={0}
-        sx={{
-          background: "transparent",
-          boxShadow: "none",
-        }}
+        sx={{ background: "transparent", boxShadow: "none" }}
       >
         <NavBar>
+          {/* Desktop */}
+          <StyledDesktopToolbar>
+            {navItems.map((item) => (
+              <StyledNavLink
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSmoothScroll(item.id);
+                }}
+              >
+                {item.label}
+              </StyledNavLink>
+            ))}
+          </StyledDesktopToolbar>
+
           {/* Mobile */}
           <StyledMobileToolbar>
             <IconButton
               size="large"
               aria-label="menu"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
+              onClick={() => setDrawerOpen(true)}
+              sx={{ color: theme.palette.tertiary.contrastText }}
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => handleSmoothScroll("about")}>
-                <StyledNavLink href="#about">Sobre</StyledNavLink>
-              </MenuItem>
-              <MenuItem onClick={() => handleSmoothScroll("skills")}>
-                <StyledNavLink href="#prevention">Prevenção</StyledNavLink>
-              </MenuItem>
-            </Menu>
           </StyledMobileToolbar>
-
-          {/* Desktop */}
-          <StyledDesktopToolbar>
-            <MenuItem onClick={() => handleSmoothScroll("about")}>
-              <StyledNavLink href="#about">Sobre</StyledNavLink>
-            </MenuItem>
-            <MenuItem onClick={() => handleSmoothScroll("skills")}>
-              <StyledNavLink href="#prevention">Prevenção</StyledNavLink>
-            </MenuItem>
-          </StyledDesktopToolbar>
         </NavBar>
       </AppBar>
+
+      {/* Drawer mobile */}
+      <Drawer
+        anchor="top"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{
+          sx: {
+            background: "linear-gradient(135deg, #730217 0%, #D9326F 100%)",
+            boxShadow: "none",
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
+          <IconButton
+            onClick={() => setDrawerOpen(false)}
+            sx={{ color: theme.palette.tertiary.contrastText }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        <List sx={{ px: 3, pb: 3, display: "flex", flexDirection: "column", gap: 1 }}>
+          {navItems.map((item) => (
+            <ListItem key={item.id} disablePadding>
+              <StyledNavLink
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSmoothScroll(item.id);
+                }}
+                sx={{ fontSize: "1.2rem", py: 1 }}
+              >
+                {item.label}
+              </StyledNavLink>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
     </Box>
   );
 }
